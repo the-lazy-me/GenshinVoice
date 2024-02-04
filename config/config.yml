@@ -1,0 +1,14 @@
+data:
+  character: "派蒙_ZH"
+  # 选择默认的角色，可选的参考同目录的 角色列表.txt，也可以在对话中调整
+  audio_speed: 1 # 语音播放速度
+  #这几个不懂不用调
+  ns: 0.5
+  nsw: 0.9
+  sdp_radio: 0.2
+  timeout: 30
+  emotion: "Happy"
+  weight: 0.7
+
+# 是否默认开启语音功能，默认为False，即不开启，True为默认开启，看你喜好
+voice_switch: False
