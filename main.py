@@ -77,11 +77,11 @@ class GenshinVoicePlugin(Plugin):
         params = kwargs["params"]
         if command == "ysvoice":
             if params[0] == "help":
-                event.add_return("reply", ["ysvoice switch [角色名] - 切换角色",
-                                           "ysvoice on - 开启语音生成",
-                                           "ysvoice off - 关闭语音生成",
-                                           "ysvoice status - 查看原神语音插件开关状态",
-                                           "ysvoice list - 查看角色列表"])
+                event.add_return("reply", ["!ysvoice switch [角色名] - 切换角色",
+                                           "!ysvoice on - 开启语音生成",
+                                           "!ysvoice off - 关闭语音生成",
+                                           "!ysvoice status - 查看原神语音插件开关状态",
+                                           "!ysvoice list - 查看角色列表"])
                 event.prevent_default()
                 event.prevent_postorder()
             elif params[0] == "on":
