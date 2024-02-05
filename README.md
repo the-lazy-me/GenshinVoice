@@ -66,6 +66,8 @@ voice_switch: False
 
 管理员向机器人发送下面指令，私聊直接发指令，群里@后面加指令
 
+- `!ysvoice status` 原神语音插件状态查看
+
 - `!ysvoice on`：开启原神语音
 - `!ysvoice off`：关闭原神语音
 - `!ysvoice switch <角色名>`：切换语音声线，把`<角色名>`替换为config文件夹下的`角色列表.txt`里面的角色

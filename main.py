@@ -50,7 +50,9 @@ class MyPlugin(Plugin):
 
             audio_generator = AudioGenerator(config['data'], character=user_character or None)
 
-            logging.info("使用角色“" + user_character + "”进行语音合成" if user_character else "使用默认角色进行语音合成")
+            logging.info(
+                "使用角色“" + user_character + "”进行语音合成" if user_character else "使用默认角色" + config["data"][
+                    "character"] + "进行语音合成")
 
             result = audio_generator.generate_audio(res_text)
 
@@ -78,8 +80,7 @@ class MyPlugin(Plugin):
                     "ysvoice on: 开启原神语音\nysvoice off: 关闭原神语音\nysvoice switch <角色名>: 切换角色\nysvoice list: 查看角色列表"])
                 event.prevent_default()
                 event.prevent_postorder()
-        if command == "ysvoice" and kwargs["is_admin"]:
-            if params[0] == "on":
+            elif params[0] == "on":
                 enable = True
                 event.add_return("reply", ["原神语音生成已开启"])
                 event.prevent_default()
@@ -88,6 +89,11 @@ class MyPlugin(Plugin):
                 event.add_return("reply", ["原神语音生成已关闭"])
                 logging.info(enable)
                 event.prevent_default()
+            elif params[0] == "status":
+                if enable:
+                    event.add_return("reply", ["原神语音生成已开启"])
+                else:
+                    event.add_return("reply", ["原神语音生成已关闭"])
         if command == "ysvoice" and kwargs["is_admin"]:
             if params[0] == "switch":
                 # 读取角色列表txt
