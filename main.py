@@ -27,7 +27,7 @@ def send_msg(kwargs, msg):
 
 # 注册插件
 @register(name="GenshinVoice", description="一个生成原神语音的插件", version="1.0", author="the-lazy-me")
-class MyPlugin(Plugin):
+class GenshinVoicePlugin(Plugin):
 
     # 插件加载时触发
     # plugin_host (pkg.plugin.host.PluginHost) 提供了与主程序交互的一些方法，详细请查看其源码
@@ -72,28 +72,48 @@ class MyPlugin(Plugin):
     @on(GroupCommandSent)
     def open_text_to_voice(self, event: EventContext, **kwargs):
         global enable
+        global user_character
         command = kwargs["command"]
         params = kwargs["params"]
         if command == "ysvoice":
             if params[0] == "help":
-                event.add_return("reply", [
-                    "ysvoice on: 开启原神语音\nysvoice off: 关闭原神语音\nysvoice switch <角色名>: 切换角色\nysvoice list: 查看角色列表"])
+                event.add_return("reply", ["ysvoice switch [角色名] - 切换角色",
+                                           "ysvoice on - 开启语音生成",
+                                           "ysvoice off - 关闭语音生成",
+                                           "ysvoice status - 查看原神语音插件开关状态",
+                                           "ysvoice list - 查看角色列表"])
                 event.prevent_default()
                 event.prevent_postorder()
             elif params[0] == "on":
                 enable = True
                 event.add_return("reply", ["原神语音生成已开启"])
                 event.prevent_default()
+                event.prevent_postorder()
+                
             elif params[0] == "off":
                 enable = False
                 event.add_return("reply", ["原神语音生成已关闭"])
-                logging.info(enable)
                 event.prevent_default()
+                event.prevent_postorder()
+
             elif params[0] == "status":
                 if enable:
-                    event.add_return("reply", ["原神语音生成已开启"])
+                    if user_character:
+                        event.add_return("reply", ["原神语音生成已开启，当前角色：" + user_character])
+                    else:
+                        event.add_return("reply", ["原神语音生成已开启，当前角色（默认）：" + config["data"]["character"]])
+                    event.prevent_default()
+                    event.prevent_postorder()
+
                 else:
-                    event.add_return("reply", ["原神语音生成已关闭"])
+                    if user_character:
+                        event.add_return("reply", ["原神语音生成已关闭，当前角色：" + user_character])
+                    else:
+                        event.add_return("reply", ["原神语音生成已关闭，当前角色（默认）：" + config["data"]["character"]])
+                    event.prevent_default()
+                    event.prevent_postorder()
+
+                    
         if command == "ysvoice" and kwargs["is_admin"]:
             if params[0] == "switch":
                 # 读取角色列表txt
@@ -101,7 +121,6 @@ class MyPlugin(Plugin):
                           encoding='UTF-8') as file:
                     characters = file.read().splitlines()
                 if params[1] in characters:
-                    global user_character
                     user_character = params[1]
                     event.add_return("reply", ["角色已切换为：" + user_character])
                     event.prevent_default()
