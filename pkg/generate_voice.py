@@ -3,7 +3,7 @@ import requests
 import logging
 import yaml
 from uuid import uuid4
-from plugins.GenshinVoice.pkg.audio_converter import convert_audio_to_silk
+from plugins.GenshinVoice.pkg.audio_converter import convert_to_silk
 
 
 class AudioGenerator:
@@ -25,9 +25,11 @@ class AudioGenerator:
                 self.config["nsw"],
                 self.config["audio_speed"],
                 self.config["character"].split("_")[1],
+                False,
+                self.config["para_stop"],
+                self.config["sen_stop"],
                 None,
                 self.config["emotion"],
-                "Text prompt",
                 "",
                 self.config["weight"]
             ],
@@ -35,10 +37,10 @@ class AudioGenerator:
             "fn_index": 0,
             "session_hash": session_hash
         }
-        logging.debug(data)
+        # print(data)
         headers = {
             "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
         }
 
         try:
@@ -46,6 +48,7 @@ class AudioGenerator:
             response_data = resp.json()["data"]
             if response_data[0] == "Success":
                 file_name = response_data[1]["name"]
+                # print(api + f"/file={file_name}")
                 return api + f"/file={file_name}"
         except Exception as e:
             logging.error(f"Error generating audio: {str(e)}")
@@ -58,7 +61,7 @@ class AudioGenerator:
             if audio_content.status_code == 200:
                 with open(save_path, "wb") as f:
                     f.write(audio_content.content)
-                logging.info(f"Audio downloaded successfully to {save_path}")
+                logging.debug(f"Audio downloaded successfully to {save_path}")
                 return True
         except Exception as e:
             logging.error(f"Error downloading audio: {str(e)}")
@@ -73,16 +76,18 @@ class AudioGenerator:
 
         if audio_url:
             save_path = os.path.join(os.getcwd(), "../audio_temp", f"{session_hash}.mp3")
+            # print(save_path)
             success = self.download_audio(audio_url, save_path)
 
             if success:
-                silk_path = convert_audio_to_silk(save_path, "../audio_temp")
+                silk_path = convert_to_silk(save_path, "../audio_temp")
                 os.remove(save_path)
-                print(silk_path)
+                # print(silk_path)
                 return silk_path
             else:
                 logging.error("Failed to download audio.")
         else:
+            # print(audio_url)
             logging.error("Failed to generate audio.")
         return None
 

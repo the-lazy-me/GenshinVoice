@@ -63,6 +63,7 @@ class GenshinVoicePlugin(Plugin):
 
                 # 发送语音消息
                 voice_msg = mirai.Voice(base64=base64.b64encode(result).decode('utf-8'))
+                # print(base64.b64encode(result).decode('utf-8'))
                 send_msg(kwargs, voice_msg)
             event.prevent_default()
             event.prevent_postorder()
@@ -77,7 +78,8 @@ class GenshinVoicePlugin(Plugin):
         params = kwargs["params"]
         if command == "ysvoice":
             if params[0] == "help":
-                event.add_return("reply", ["!ysvoice switch [角色名]    \n切换角色\n!ysvoice on    \n开启语音生成\n!ysvoice off    \n关闭语音生成\n!ysvoice status    \n查看原神语音插件开关状态\n!ysvoice list    \n查看角色列表"])
+                event.add_return("reply", [
+                    "!ysvoice switch [角色名]    \n切换角色\n!ysvoice on    \n开启语音生成\n!ysvoice off    \n关闭语音生成\n!ysvoice status    \n查看原神语音插件开关状态\n!ysvoice list    \n查看角色列表"])
                 event.prevent_default()
                 event.prevent_postorder()
             elif params[0] == "on":
@@ -85,7 +87,7 @@ class GenshinVoicePlugin(Plugin):
                 event.add_return("reply", ["原神语音生成已开启"])
                 event.prevent_default()
                 event.prevent_postorder()
-                
+
             elif params[0] == "off":
                 enable = False
                 event.add_return("reply", ["原神语音生成已关闭"])
@@ -109,7 +111,6 @@ class GenshinVoicePlugin(Plugin):
                     event.prevent_default()
                     event.prevent_postorder()
 
-                    
         if command == "ysvoice" and kwargs["is_admin"]:
             if params[0] == "switch":
                 # 读取角色列表txt
