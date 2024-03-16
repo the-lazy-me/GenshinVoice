@@ -25,7 +25,7 @@ class AudioGenerator:
                 self.config["nsw"],
                 self.config["audio_speed"],
                 self.config["character"].split("_")[1],
-                False,
+                True,
                 self.config["para_stop"],
                 self.config["sen_stop"],
                 None,
