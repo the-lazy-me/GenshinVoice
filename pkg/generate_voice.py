@@ -15,7 +15,7 @@ class AudioGenerator:
             self.config["character"] = character
 
     def get_audio_url(self, text: str, session_hash):
-        api = "https://v2.genshinvoice.top"
+        api = https://bv2.firefly.matce.cn/"
         data = {
             "data": [
                 text,
